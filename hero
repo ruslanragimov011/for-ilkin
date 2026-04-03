@@ -1,0 +1,51 @@
+import pygame
+
+pygame.init()
+
+WIDTH = 800
+HEIGHT = 800
+FPS = 60
+display = pygame.display.set_mode((WIDTH, HEIGHT,))
+pygame.display.set_caption("Ruslan game")
+clock = pygame.time.Clock()
+
+background_image = pygame.image.load("images/bg11.png")
+background_rect = background_image.get_rect()
+
+
+
+
+class Hero:
+    def __init__(self, screen_width, screen_height):
+        self.images_right = []
+        self.images_left = []
+        self.index = 0
+        self.counter = 0
+        self.direction = "right"
+        for num in range(1, 5):
+            self.image_right = pygame.image.load(f"images/hero{num}.png")
+            self.image_right = pygame.transform.scale(self.image_right, (50, 50))
+            self.image_left = pygame.transform.flip(self.image_right, True, False)
+            self.images_right.append(self.image_right)
+            self.images_left.append(self.image_left)
+
+        self.image = self.images_right[self.index]
+        self.rect = self.image.get_rect()
+        self.rect.x = 0
+        self.rect.y = screen_height - self.rect.height
+        self.screen_width = screen_width
+        self.speed = 5
+
+    def update(self, display):
+        if self.direction == "right":
+            self.rect.x += self.speed
+            if self.rect.right >= self.screen_width:
+                self.direction = "left"
+                self.image = self.images_left[self.index]
+        else:
+            self.rect.x -= self.speed
+            if self.rect.left <= 0:
+                self.direction = "right"
+                self.image = self.images_right[self.index]
+
+        display.blit(self.image, self.rect)
